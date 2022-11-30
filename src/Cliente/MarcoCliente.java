@@ -1,4 +1,4 @@
-package Sockets.Cliente;
+package Cliente;
 
 import javax.swing.*;
 
@@ -6,8 +6,8 @@ public class MarcoCliente extends JFrame {
     public MarcoCliente() {
         setLAF();
 
-        setBounds(600, 300, 280, 350);
-        LaminaMarcoCliente miLamina = new LaminaMarcoCliente("Cliente");
+        setBounds(600, 300, 400, 350);
+        LaminaMarcoCliente miLamina = new LaminaMarcoCliente();
         setResizable(false);
         add(miLamina);
 

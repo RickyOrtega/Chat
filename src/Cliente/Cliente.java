@@ -1,4 +1,4 @@
-package Sockets.Cliente;
+package Cliente;
 
 import javax.swing.*;
 

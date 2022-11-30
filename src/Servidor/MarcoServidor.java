@@ -1,10 +1,10 @@
-package Sockets.Servidor;
+package Servidor;
+
+import Cliente.PaqueteEnvio;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.DataInput;
-import java.io.DataInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -34,19 +34,56 @@ public class MarcoServidor extends JFrame implements Runnable {
         System.out.println("Iniciando servidor...");
 
         try {
-            ServerSocket servidor = new ServerSocket(1998);
+            ServerSocket servidor = new ServerSocket(9090);
 
-            Socket socket = servidor.accept();
+            String nick;
+            String ip;
+            String mensaje;
 
-            DataInputStream flujoEntrada = new DataInputStream(socket.getInputStream());
+            PaqueteEnvio paqueteRecibido;
 
-            String mensajeTexto = flujoEntrada.readUTF();
+            while (true){
+                Socket socket = servidor.accept();
 
-            areaTexto.append(mensajeTexto + "\n");
+/*                DataInputStream flujoEntrada = new DataInputStream(socket.getInputStream());
 
-            socket.close();
+                String mensajeTexto = flujoEntrada.readUTF();
+
+                areaTexto.append(mensajeTexto + "\n");*/
+
+                ObjectInputStream paqueteDatos = new ObjectInputStream(socket.getInputStream());
+
+                paqueteRecibido = (PaqueteEnvio) paqueteDatos.readObject();
+
+                nick = paqueteRecibido.getNick();
+
+                ip = paqueteRecibido.getIp();
+
+                mensaje = paqueteRecibido.getMensaje();
+
+                areaTexto.append("\n" + nick + ": ");
+                areaTexto.setFont(areaTexto.getFont().deriveFont(2,12f));
+                areaTexto.setForeground(Color.GREEN);
+                areaTexto.append(mensaje);
+                areaTexto.setForeground(Color.BLACK);
+                areaTexto.append(" para " + ip);
+
+                Socket enviaDestinatario = new Socket(ip,1998);
+
+                ObjectOutputStream paqueteReenvio = new ObjectOutputStream(enviaDestinatario.getOutputStream());
+
+                paqueteReenvio.writeObject(paqueteRecibido);
+
+                paqueteReenvio.close();
+
+                enviaDestinatario.close(); // Cierra el reenvío
+
+                socket.close(); //Cierra la entrada de datos
+            }
 
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }

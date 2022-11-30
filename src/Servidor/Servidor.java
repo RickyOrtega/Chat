@@ -1,4 +1,4 @@
-package Sockets.Servidor;
+package Servidor;
 
 import javax.swing.*;
 

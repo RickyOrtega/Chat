@@ -1,6 +1,8 @@
-package Sockets.Cliente;
+package Cliente;
 
-public class PaqueteEnvio {
+import java.io.Serializable;
+
+public class PaqueteEnvio implements Serializable {
     private String nick;
     private String ip;
     private String mensaje;
